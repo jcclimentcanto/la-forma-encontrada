@@ -16,18 +16,30 @@ button { background:transparent; border:1px solid #C04828; color:#C04828; font-f
 </head>
 <body>
 <div style="color:#C04828;font-size:12px;letter-spacing:3px;margin-bottom:8px;">AR DIAGNÓSTICO</div>
-<div style="color:#333;font-size:9px;letter-spacing:2px;margin-bottom:20px;">v7 — unpkg CDN</div>
+<div style="color:#333;font-size:9px;letter-spacing:2px;margin-bottom:20px;">v9 — mindar-image.prod.js</div>
 
 <button onclick="testCamera()">1. PROBAR CÁMARA</button>
 <button onclick="testMindAR()">2. INSPECCIONAR MINDAR</button>
+<button onclick="scanAllGlobals()">2b. BUSCAR EN TODOS LOS GLOBALS</button>
 <button onclick="testFull()">3. TEST COMPLETO</button>
 <a href="index.html" style="color:#333;font-size:10px;letter-spacing:2px;display:block;margin-top:10px;">← VOLVER</a>
 
 <video id="video-test" autoplay playsinline muted></video>
 <div id="log"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="mindar-image-three.prod.js"></script>
+<script src="mindar-image.prod.js"
+  onload="document.getElementById('mindar-status').textContent='mindar-image.prod.js: cargado ✓'"
+  onerror="document.getElementById('mindar-status').textContent='mindar-image.prod.js: ERROR ✗ — archivo no encontrado'"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" 
+  onload="document.getElementById('three-status').textContent='THREE: cargado ✓'"
+  onerror="document.getElementById('three-status').textContent='THREE: ERROR ✗'"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-three.prod.js"
+  onload="document.getElementById('mindar-three-status').textContent='mindar-image-three: cargado ✓'"
+  onerror="document.getElementById('mindar-three-status').textContent='mindar-image-three: ERROR ✗'"></script>
+<p id="three-status" style="color:#888;font-size:9px;margin:4px 0;">THREE: cargando...</p>
+<p id="mindar-status" style="color:#888;font-size:9px;margin:4px 0;">mindar-image.prod.js: cargando...</p>
+<p id="mindar-three-status" style="color:#888;font-size:9px;margin:4px 0;">mindar-image-three: cargando...</p>
+
 <script>
 const log = document.getElementById('log');
 function msg(text, type='') {
@@ -37,7 +49,32 @@ function msg(text, type='') {
   log.appendChild(p);
 }
 
-async function testCamera() {
+function scanAllGlobals() {
+  log.innerHTML = '';
+  msg('Escaneando todos los globals...');
+  // Buscar cualquier objeto que pueda ser MindAR
+  const keys = Object.keys(window);
+  const suspects = keys.filter(k => {
+    try {
+      const v = window[k];
+      return typeof v === 'object' && v !== null && 
+             JSON.stringify(Object.keys(v||{})).toLowerCase().includes('mindar');
+    } catch(e) { return false; }
+  });
+  msg('Globals totales: ' + keys.length);
+  msg('Sospechosos MindAR: ' + (suspects.length ? suspects.join(', ') : 'ninguno'));
+  
+  // Buscar funciones/clases con "AR" en el nombre
+  const arKeys = keys.filter(k => k.includes('AR') || k.includes('Ar') || k.includes('ar'));
+  msg('Globals con "AR": ' + (arKeys.slice(0,10).join(', ') || 'ninguno'));
+  
+  // Ver si hay algo en el objeto MindAR
+  ['MINDAR','MindAR','mindAR','mindar','MindARThree','mindARThree'].forEach(k => {
+    msg(k + ': ' + typeof window[k]);
+  });
+}
+
+
   log.innerHTML = '';
   msg('Probando cámara...');
   try {
