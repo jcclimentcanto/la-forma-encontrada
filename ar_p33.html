@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>La Forma Encontrada — AR</title>
+<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+<script src="mindar-image-aframe.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tone@14/build/Tone.js"></script>
+<style>
+* { margin:0; padding:0; }
+#back { position:fixed; top:16px; right:16px; z-index:9999; background:rgba(0,0,0,0.8); border:0.5px solid #333; color:#aaa; font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px; padding:6px 14px; text-decoration:none; }
+#hint { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.5); font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px; text-align:center; z-index:9999; text-shadow:0 0 8px #000; width:90%; }
+#title { position:fixed; top:16px; left:16px; z-index:9999; pointer-events:none; }
+#title div:first-child { color:#C04828; font-family:'Courier New',monospace; font-size:11px; letter-spacing:3px; text-shadow:0 0 8px #000; }
+#title div:last-child  { color:#555; font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px; margin-top:3px; }
+</style>
+</head>
+<body>
+
+<div id="title">
+  <div>LA FORMA ENCONTRADA</div>
+  <div>AR — ONDAS</div>
+</div>
+<a id="back" href="index.html">← MENÚ</a>
+<div id="hint">APUNTA A LA PÁGINA 33 DEL LIBRO</div>
+
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: no;"
+  color-space="sRGB"
+  renderer="colorManagement: true"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
+
+  <a-assets></a-assets>
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  <a-entity mindar-image-target="targetIndex: 1" id="target">
+
+    <!-- Sistema de ondas — anillos que se expanden desde el centro -->
+    <!-- 20 anillos con fases diferentes para efecto continuo -->
+    <a-torus id="w0"  radius="0.05" radius-tubular="0.004" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:1"></a-torus>
+    <a-torus id="w1"  radius="0.05" radius-tubular="0.004" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:1"></a-torus>
+    <a-torus id="w2"  radius="0.05" radius-tubular="0.003" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:1"></a-torus>
+    <a-torus id="w3"  radius="0.05" radius-tubular="0.003" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:1"></a-torus>
+    <a-torus id="w4"  radius="0.05" radius-tubular="0.003" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:1"></a-torus>
+    <a-torus id="w5"  radius="0.05" radius-tubular="0.003" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:1"></a-torus>
+    <a-torus id="w6"  radius="0.05" radius-tubular="0.002" color="#fff"    rotation="90 0 0" material="transparent:true;opacity:0;emissive:#fff;emissiveIntensity:0.8"></a-torus>
+    <a-torus id="w7"  radius="0.05" radius-tubular="0.002" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:1"></a-torus>
+    <a-torus id="w8"  radius="0.05" radius-tubular="0.002" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:1"></a-torus>
+    <a-torus id="w9"  radius="0.05" radius-tubular="0.002" color="#fff"    rotation="90 0 0" material="transparent:true;opacity:0;emissive:#fff;emissiveIntensity:0.8"></a-torus>
+    <a-torus id="w10" radius="0.05" radius-tubular="0.002" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:1"></a-torus>
+    <a-torus id="w11" radius="0.05" radius-tubular="0.002" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:1"></a-torus>
+    <a-torus id="w12" radius="0.05" radius-tubular="0.002" color="#fff"    rotation="90 0 0" material="transparent:true;opacity:0;emissive:#fff;emissiveIntensity:0.6"></a-torus>
+    <a-torus id="w13" radius="0.05" radius-tubular="0.002" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:0.8"></a-torus>
+    <a-torus id="w14" radius="0.05" radius-tubular="0.001" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:0.6"></a-torus>
+    <a-torus id="w15" radius="0.05" radius-tubular="0.001" color="#fff"    rotation="90 0 0" material="transparent:true;opacity:0;emissive:#fff;emissiveIntensity:0.5"></a-torus>
+    <a-torus id="w16" radius="0.05" radius-tubular="0.001" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:0.6"></a-torus>
+    <a-torus id="w17" radius="0.05" radius-tubular="0.001" color="#185FA5" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#185FA5;emissiveIntensity:0.5"></a-torus>
+    <a-torus id="w18" radius="0.05" radius-tubular="0.001" color="#fff"    rotation="90 0 0" material="transparent:true;opacity:0;emissive:#fff;emissiveIntensity:0.4"></a-torus>
+    <a-torus id="w19" radius="0.05" radius-tubular="0.001" color="#C04828" rotation="90 0 0" material="transparent:true;opacity:0;emissive:#C04828;emissiveIntensity:0.4"></a-torus>
+
+    <!-- Triángulo rojo sutil en el centro -->
+    <a-entity line="start: -0.12 0 -0.07; end: 0.12 0 -0.07; color: #C04828" material="opacity:0.4"></a-entity>
+    <a-entity line="start: 0.12 0 -0.07; end: 0 0 0.09; color: #C04828"></a-entity>
+    <a-entity line="start: 0 0 0.09; end: -0.12 0 -0.07; color: #C04828"></a-entity>
+
+  </a-entity>
+</a-scene>
+
+<script>
+// Sistema de ondas — cada onda tiene su propio ciclo de vida
+const N = 20;
+const waves = [];
+let active = false;
+let frame = 0;
+let density = 1; // aumenta con el tiempo
+
+for (let i = 0; i < N; i++) {
+  const el = document.getElementById('w' + i);
+  waves.push({
+    el,
+    phase: i / N,   // fase escalonada para efecto continuo
+    r: 0,
+    maxR: 1.2 + (i % 5) * 0.3,  // radio máximo variable
+    speed: 0.008 + (i % 3) * 0.003,
+    alive: false
+  });
+}
+
+function animateWaves() {
+  if (!active) { requestAnimationFrame(animateWaves); return; }
+
+  frame++;
+
+  // Incrementar densidad cada 3 segundos — más ondas simultáneas
+  density = Math.min(N, 1 + Math.floor(frame / 180));
+
+  waves.forEach((w, i) => {
+    if (!w.alive) {
+      // Lanzar ola con delay escalonado según densidad
+      if (frame % Math.max(1, Math.floor(N / density)) === i % Math.max(1, Math.floor(N / density))) {
+        w.alive = true;
+        w.r = 0;
+      }
+      return;
+    }
+
+    w.r += w.speed;
+
+    if (w.r > w.maxR) {
+      w.alive = false;
+      w.el.setAttribute('scale', '0.001 0.001 0.001');
+      w.el.setAttribute('material', `transparent:true;opacity:0;emissive:${w.el.getAttribute('color')};emissiveIntensity:1`);
+      return;
+    }
+
+    const s = w.r / 0.05; // escala relativa al radio base
+    const opacity = Math.max(0, (1 - w.r / w.maxR) * 0.9);
+    w.el.setAttribute('scale', `${s} ${s} ${s}`);
+    w.el.setAttribute('material', `transparent:true;opacity:${opacity};emissive:${w.el.getAttribute('color')};emissiveIntensity:${opacity}`);
+  });
+
+  requestAnimationFrame(animateWaves);
+}
+
+animateWaves();
+
+// Eventos del target
+document.getElementById('target').addEventListener('targetFound', () => {
+  active = true;
+  frame = 0;
+  document.getElementById('hint').textContent = '✓ PÁGINA 33 DETECTADA';
+  startAudio();
+});
+document.getElementById('target').addEventListener('targetLost', () => {
+  active = false;
+  document.getElementById('hint').textContent = 'APUNTA A LA PÁGINA 33 DEL LIBRO';
+});
+
+// Audio
+let audioReady = false;
+let drones = null;
+async function startAudio() {
+  if (audioReady) return;
+  try {
+    await Tone.start();
+    const rev = new Tone.Reverb({ decay: 8, wet: 0.75 }).toDestination();
+    const del = new Tone.FeedbackDelay({ delayTime: '8n', feedback: 0.3, wet: 0.2 }).connect(rev);
+    drones = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: 'sine' },
+      envelope: { attack: 4, sustain: 1, release: 6 }
+    }).connect(del);
+    drones.volume.value = -18;
+    drones.triggerAttack(['A1', 'E2', 'A2']);
+
+    // Melodía esporádica
+    const mel = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.05, decay: 0.8, sustain: 0.2, release: 4 }
+    }).connect(rev);
+    mel.volume.value = -12;
+
+    const notes = ['D4','F4','A4','C5','D5'];
+    function playNote() {
+      mel.triggerAttackRelease(notes[Math.floor(Math.random()*notes.length)], '4n');
+      setTimeout(playNote, 3000 + Math.random() * 5000);
+    }
+    setTimeout(playNote, 1500);
+    audioReady = true;
+  } catch(e) {}
+}
+</script>
+</body>
+</html>
