@@ -9,72 +9,43 @@
 body { background:#000; font-family:'Courier New',monospace; color:#fff; padding:20px; }
 button { background:transparent; border:1px solid #C04828; color:#C04828; font-family:'Courier New',monospace; font-size:11px; padding:14px 20px; cursor:pointer; margin:8px 0; display:block; width:100%; }
 #log { margin-top:20px; font-size:10px; line-height:2; color:#888; word-break:break-all; }
-.ok { color:#4CAF50; }
-.err { color:#C04828; }
+.ok { color:#4CAF50; } .err { color:#C04828; }
 #video-test { width:100%; max-height:200px; margin-top:10px; background:#111; }
+.sline { font-size:9px; margin:3px 0; color:#555; }
 </style>
 </head>
 <body>
-<div style="color:#C04828;font-size:12px;letter-spacing:3px;margin-bottom:8px;">AR DIAGNÓSTICO</div>
-<div style="color:#333;font-size:9px;letter-spacing:2px;margin-bottom:20px;">v9 — mindar-image.prod.js</div>
+
+<div style="color:#C04828;font-size:12px;letter-spacing:3px;margin-bottom:4px;">AR DIAGNÓSTICO</div>
+<div style="color:#333;font-size:9px;letter-spacing:2px;margin-bottom:16px;">v10 — todo local</div>
+
+<div class="sline" id="s-three">three.min.js: ...</div>
+<div class="sline" id="s-mindar">mindar-image.prod.js: ...</div>
 
 <button onclick="testCamera()">1. PROBAR CÁMARA</button>
 <button onclick="testMindAR()">2. INSPECCIONAR MINDAR</button>
-<button onclick="scanAllGlobals()">2b. BUSCAR EN TODOS LOS GLOBALS</button>
 <button onclick="testFull()">3. TEST COMPLETO</button>
 <a href="index.html" style="color:#333;font-size:10px;letter-spacing:2px;display:block;margin-top:10px;">← VOLVER</a>
 
 <video id="video-test" autoplay playsinline muted></video>
 <div id="log"></div>
 
+<script src="three.min.js"
+  onload="document.getElementById('s-three').textContent='three.min.js: ✓ cargado';document.getElementById('s-three').style.color='#4CAF50';"
+  onerror="document.getElementById('s-three').textContent='three.min.js: ✗ NO ENCONTRADO';document.getElementById('s-three').style.color='#C04828';"></script>
 <script src="mindar-image.prod.js"
-  onload="document.getElementById('mindar-status').textContent='mindar-image.prod.js: cargado ✓'"
-  onerror="document.getElementById('mindar-status').textContent='mindar-image.prod.js: ERROR ✗ — archivo no encontrado'"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" 
-  onload="document.getElementById('three-status').textContent='THREE: cargado ✓'"
-  onerror="document.getElementById('three-status').textContent='THREE: ERROR ✗'"></script>
-<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-three.prod.js"
-  onload="document.getElementById('mindar-three-status').textContent='mindar-image-three: cargado ✓'"
-  onerror="document.getElementById('mindar-three-status').textContent='mindar-image-three: ERROR ✗'"></script>
-<p id="three-status" style="color:#888;font-size:9px;margin:4px 0;">THREE: cargando...</p>
-<p id="mindar-status" style="color:#888;font-size:9px;margin:4px 0;">mindar-image.prod.js: cargando...</p>
-<p id="mindar-three-status" style="color:#888;font-size:9px;margin:4px 0;">mindar-image-three: cargando...</p>
+  onload="document.getElementById('s-mindar').textContent='mindar-image.prod.js: ✓ cargado';document.getElementById('s-mindar').style.color='#4CAF50';"
+  onerror="document.getElementById('s-mindar').textContent='mindar-image.prod.js: ✗ NO ENCONTRADO';document.getElementById('s-mindar').style.color='#C04828';"></script>
 
 <script>
 const log = document.getElementById('log');
 function msg(text, type='') {
   const p = document.createElement('p');
-  p.textContent = text;
-  p.className = type;
+  p.textContent = text; p.className = type;
   log.appendChild(p);
 }
 
-function scanAllGlobals() {
-  log.innerHTML = '';
-  msg('Escaneando todos los globals...');
-  // Buscar cualquier objeto que pueda ser MindAR
-  const keys = Object.keys(window);
-  const suspects = keys.filter(k => {
-    try {
-      const v = window[k];
-      return typeof v === 'object' && v !== null && 
-             JSON.stringify(Object.keys(v||{})).toLowerCase().includes('mindar');
-    } catch(e) { return false; }
-  });
-  msg('Globals totales: ' + keys.length);
-  msg('Sospechosos MindAR: ' + (suspects.length ? suspects.join(', ') : 'ninguno'));
-  
-  // Buscar funciones/clases con "AR" en el nombre
-  const arKeys = keys.filter(k => k.includes('AR') || k.includes('Ar') || k.includes('ar'));
-  msg('Globals con "AR": ' + (arKeys.slice(0,10).join(', ') || 'ninguno'));
-  
-  // Ver si hay algo en el objeto MindAR
-  ['MINDAR','MindAR','mindAR','mindar','MindARThree','mindARThree'].forEach(k => {
-    msg(k + ': ' + typeof window[k]);
-  });
-}
-
-
+async function testCamera() {
   log.innerHTML = '';
   msg('Probando cámara...');
   try {
@@ -83,8 +54,6 @@ function scanAllGlobals() {
     document.getElementById('video-test').srcObject = stream;
     const t = stream.getVideoTracks()[0];
     msg('Dispositivo: ' + t.label);
-    const s = t.getSettings();
-    msg('Resolución: ' + s.width + 'x' + s.height);
   } catch(e) {
     msg('✗ ' + e.name + ': ' + e.message, 'err');
   }
@@ -93,68 +62,47 @@ function scanAllGlobals() {
 function testMindAR() {
   log.innerHTML = '';
   msg('THREE: ' + (typeof THREE !== 'undefined' ? '✓' : '✗'));
-  msg('window.MINDAR tipo: ' + typeof window.MINDAR);
-
+  msg('window.MINDAR: ' + typeof window.MINDAR);
   if (window.MINDAR) {
-    msg('MINDAR keys: ' + Object.keys(window.MINDAR).join(', '));
+    msg('MINDAR keys: ' + Object.keys(window.MINDAR).join(', '), 'ok');
     if (window.MINDAR.IMAGE) {
       msg('✓ MINDAR.IMAGE existe', 'ok');
-      msg('MINDAR.IMAGE keys: ' + Object.keys(window.MINDAR.IMAGE).join(', '));
-    } else {
-      msg('✗ MINDAR.IMAGE no existe', 'err');
+      msg('MindARThree: ' + typeof window.MINDAR.IMAGE.MindARThree);
     }
   }
-
-  // Buscar en otros sitios
   const mindKeys = Object.keys(window).filter(k => k.toLowerCase().includes('mind'));
-  msg('Globals "mind": ' + (mindKeys.length ? mindKeys.join(', ') : 'ninguno'));
-  msg('window.MindARThree: ' + typeof window.MindARThree);
+  msg('Globals mind: ' + (mindKeys.join(', ') || 'ninguno'));
 }
 
 async function testFull() {
   log.innerHTML = '';
   msg('Test completo...');
-
-  // Paso 1 — cámara
   try {
     const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-    msg('✓ Paso 1: Cámara OK', 'ok');
+    msg('✓ Cámara OK', 'ok');
     s.getTracks().forEach(t => t.stop());
-  } catch(e) {
-    msg('✗ Paso 1: ' + e.message, 'err'); return;
-  }
+  } catch(e) { msg('✗ Cámara: ' + e.message, 'err'); return; }
 
-  // Paso 2 — encontrar MindARThree
-  const MindARThree = window.MINDAR?.IMAGE?.MindARThree
-    || window.MindARThree
-    || window.MindAR?.IMAGE?.MindARThree;
+  const MindARThree = window.MINDAR?.IMAGE?.MindARThree;
+  if (!MindARThree) { msg('✗ MindARThree no encontrado', 'err'); return; }
+  msg('✓ MindARThree OK', 'ok');
 
-  if (!MindARThree) {
-    msg('✗ Paso 2: MindARThree no encontrado', 'err');
-    msg('Globals mind: ' + Object.keys(window).filter(k=>k.toLowerCase().includes('mind')).join(', '));
-    return;
-  }
-  msg('✓ Paso 2: MindARThree OK', 'ok');
-
-  // Paso 3 — init
   const wrapper = document.createElement('div');
   wrapper.style.cssText = 'position:fixed;inset:0;z-index:1;';
   document.body.appendChild(wrapper);
-
   try {
-    const mindarThree = new MindARThree({
+    const m = new MindARThree({
       container: wrapper,
-      imageTargetSrc: 'https://jcclimentcanto.github.io/la-forma-encontrada/targets.mind',
-      maxTrack: 1,
-      uiLoading: 'no', uiError: 'no', uiScanning: 'no'
+      imageTargetSrc: 'targets.mind',
+      maxTrack: 1, uiLoading:'no', uiError:'no', uiScanning:'no'
     });
-    msg('✓ Paso 3: instancia creada', 'ok');
+    msg('✓ Instancia creada', 'ok');
     msg('Iniciando AR...');
-    await mindarThree.start();
-    msg('✓ Paso 4: AR iniciado!', 'ok');
-    setTimeout(() => { mindarThree.stop(); wrapper.remove(); msg('Detenido.'); }, 5000);
+    await m.start();
+    msg('✓ AR FUNCIONA!', 'ok');
+    setTimeout(() => { m.stop(); wrapper.remove(); msg('Detenido.'); }, 5000);
   } catch(e) {
-    msg('✗ Error: ' + (e.message || e.name), 'err');
+    msg('✗ ' + (e.message || e.name), 'err');
     wrapper.remove();
   }
 }
