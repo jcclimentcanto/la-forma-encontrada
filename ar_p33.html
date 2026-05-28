@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>La Forma Encontrada — AR</title>
+<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+<script src="mindar-image-aframe.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tone@14/build/Tone.js"></script>
+<style>
+* { margin:0; padding:0; }
+#back { position:fixed; top:16px; right:16px; z-index:9999; background:rgba(0,0,0,0.8); border:0.5px solid #333; color:#aaa; font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px; padding:6px 14px; text-decoration:none; }
+#hint { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.5); font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px; text-align:center; z-index:9999; text-shadow:0 0 8px #000; width:90%; pointer-events:none; }
+#title { position:fixed; top:16px; left:16px; z-index:9999; pointer-events:none; }
+#title div:first-child { color:#C04828; font-family:'Courier New',monospace; font-size:11px; letter-spacing:3px; text-shadow:0 0 8px #000; }
+#title div:last-child  { color:#555; font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px; margin-top:3px; }
+#audio-hint { position:fixed; bottom:50px; left:50%; transform:translateX(-50%); color:rgba(192,72,40,0.6); font-family:'Courier New',monospace; font-size:8px; letter-spacing:2px; text-align:center; z-index:9999; pointer-events:none; }
+</style>
+</head>
+<body>
+
+<div id="title">
+  <div>LA FORMA ENCONTRADA</div>
+  <div>AR — DIAGONALES</div>
+</div>
+<a id="back" href="index.html">← MENÚ</a>
+<div id="hint">APUNTA A LA PÁGINA 33 DEL LIBRO</div>
+<div id="audio-hint">TOCA LA PANTALLA PARA ACTIVAR SONIDO</div>
+
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: no;"
+  color-space="sRGB"
+  renderer="colorManagement: true"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false">
+
+  <a-assets></a-assets>
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  <a-entity mindar-image-target="targetIndex: 1" id="target">
+    <!-- Contenedor que rota — las diagonales están dentro -->
+    <a-entity id="diag-group">
+
+      <!-- Diagonales — líneas que cruzan el espacio expandiéndose -->
+      <!-- Grupo 1 — rojas -->
+      <a-entity id="d0"  line="start:-2 0 -2; end:2 0 2;  color:#C04828" material="opacity:0.7"></a-entity>
+      <a-entity id="d1"  line="start:-2 0 -1; end:2 0 1;  color:#C04828" material="opacity:0.5"></a-entity>
+      <a-entity id="d2"  line="start:-2 0  0; end:2 0 0;  color:#C04828" material="opacity:0.4"></a-entity>
+      <a-entity id="d3"  line="start:-2 0  1; end:2 0 -1; color:#C04828" material="opacity:0.5"></a-entity>
+      <a-entity id="d4"  line="start:-2 0  2; end:2 0 -2; color:#C04828" material="opacity:0.7"></a-entity>
+      <!-- Grupo 2 — azules -->
+      <a-entity id="d5"  line="start:-1.5 0 -2; end:1.5 0 2;  color:#185FA5" material="opacity:0.5"></a-entity>
+      <a-entity id="d6"  line="start:-1.5 0  2; end:1.5 0 -2; color:#185FA5" material="opacity:0.5"></a-entity>
+      <a-entity id="d7"  line="start:-2 0 -1.5; end:2 0 1.5;  color:#185FA5" material="opacity:0.4"></a-entity>
+      <a-entity id="d8"  line="start:-2 0  1.5; end:2 0 -1.5; color:#185FA5" material="opacity:0.4"></a-entity>
+      <!-- Grupo 3 — blancas tenues -->
+      <a-entity id="d9"  line="start:-2 0 -0.5; end:2 0 0.5; color:#ffffff" material="opacity:0.2"></a-entity>
+      <a-entity id="d10" line="start:-2 0  0.5; end:2 0 -0.5; color:#ffffff" material="opacity:0.2"></a-entity>
+      <a-entity id="d11" line="start:-0.5 0 -2; end:0.5 0 2;  color:#ffffff" material="opacity:0.2"></a-entity>
+      <a-entity id="d12" line="start: 0.5 0 -2; end:-0.5 0 2; color:#ffffff" material="opacity:0.2"></a-entity>
+
+    </a-entity>
+
+    <!-- Triángulo rojo en el centro como ancla -->
+    <a-entity line="start:-0.15 0.01 -0.09; end:0.15 0.01 -0.09; color:#C04828"></a-entity>
+    <a-entity line="start:0.15 0.01 -0.09; end:0 0.01 0.11; color:#C04828"></a-entity>
+    <a-entity line="start:0 0.01 0.11; end:-0.15 0.01 -0.09; color:#C04828"></a-entity>
+
+  </a-entity>
+</a-scene>
+
+<script>
+let active = false;
+let frame = 0;
+let expandScale = 0.01; // empieza pequeño y crece
+const diagGroup = document.getElementById('diag-group');
+
+function animate() {
+  if (active) {
+    frame++;
+    // Expandir progresivamente
+    expandScale = Math.min(1.0, expandScale + 0.003);
+    // Rotar lentamente
+    const rot = frame * 0.4;
+    diagGroup.setAttribute('rotation', `0 ${rot} 0`);
+    diagGroup.setAttribute('scale', `${expandScale} ${expandScale} ${expandScale}`);
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+document.getElementById('target').addEventListener('targetFound', () => {
+  active = true;
+  frame = 0;
+  expandScale = 0.01;
+  document.getElementById('hint').textContent = '✓ PÁGINA 33 DETECTADA';
+  startAudio();
+});
+document.getElementById('target').addEventListener('targetLost', () => {
+  active = false;
+  document.getElementById('hint').textContent = 'APUNTA A LA PÁGINA 33 DEL LIBRO';
+});
+
+// Audio — activar con toque en pantalla
+let audioReady = false;
+document.addEventListener('touchstart', () => startAudio(), { once: true });
+document.addEventListener('click', () => startAudio(), { once: true });
+
+async function startAudio() {
+  if (audioReady) return;
+  try {
+    await Tone.start();
+    document.getElementById('audio-hint').style.display = 'none';
+    const rev = new Tone.Reverb({ decay: 7, wet: 0.7 }).toDestination();
+    const del = new Tone.FeedbackDelay({ delayTime: '8n', feedback: 0.25, wet: 0.15 }).connect(rev);
+
+    // Drones
+    const drones = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: 'sine' },
+      envelope: { attack: 4, sustain: 1, release: 6 }
+    }).connect(del);
+    drones.volume.value = -18;
+    drones.triggerAttack(['A1', 'E2', 'A2']);
+
+    // Melodía esporádica
+    const mel = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.06, decay: 1.0, sustain: 0.15, release: 4 }
+    }).connect(rev);
+    mel.volume.value = -12;
+    const notes = ['D4','F4','A4','C5','D5','F5'];
+    function playNote() {
+      if (audioReady) {
+        mel.triggerAttackRelease(notes[Math.floor(Math.random()*notes.length)], '4n');
+        setTimeout(playNote, 3000 + Math.random() * 6000);
+      }
+    }
+    setTimeout(playNote, 2000);
+    audioReady = true;
+  } catch(e) { console.warn('audio:', e); }
+}
+</script>
+</body>
+</html>
