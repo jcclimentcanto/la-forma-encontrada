@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Forma Encontrada</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#000; font-family:'Courier New',monospace; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px 20px; }
+.title { color:#C04828; font-size:18px; letter-spacing:6px; margin-bottom:6px; text-align:center; }
+.sub { color:#222; font-size:9px; letter-spacing:3px; margin-bottom:40px; text-align:center; }
+.section-label { color:#333; font-size:8px; letter-spacing:4px; margin-bottom:14px; text-align:center; width:100%; max-width:480px; padding-bottom:8px; border-bottom:0.5px solid #181816; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:480px; margin-bottom:30px; }
+.grid-ar { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:480px; margin-bottom:30px; }
+.btn {
+  padding:18px 10px; background:transparent; border:0.5px solid #181816;
+  color:#444; font-family:'Courier New',monospace; font-size:9px; letter-spacing:3px;
+  cursor:pointer; text-decoration:none;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  transition:all 0.3s;
+}
+.btn:hover { border-color:#C04828; color:#C04828; }
+.btn:hover svg { opacity:1; }
+.btn svg { opacity:0.5; transition:opacity 0.3s; }
+.btn-ar { border-color:#185FA5; color:#185FA5; }
+.btn-ar:hover { border-color:#C04828; color:#C04828; }
+.btn-ar svg { opacity:0.6; }
+.footer { color:#111; font-size:8px; letter-spacing:2px; text-align:center; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="title">LA FORMA ENCONTRADA</div>
+<div class="sub">SISTEMA GENERATIVO INMERSIVO</div>
+
+<!-- MODOS GENERATIVOS -->
+<div class="section-label">EXPERIENCIAS GENERATIVAS</div>
+<div class="grid">
+  <a class="btn" href="triangulo.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <polygon points="20,3 37,34 3,34" stroke="#C04828" stroke-width="1.2" fill="none"/>
+      <circle cx="20" cy="3" r="2.5" fill="#C04828"/>
+      <circle cx="37" cy="34" r="2.5" fill="#C04828"/>
+      <circle cx="3" cy="34" r="2.5" fill="#C04828"/>
+    </svg>
+    TRIÁNGULO
+  </a>
+  <a class="btn" href="waves.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <path d="M2 12 Q9 4 16 12 Q23 20 30 12 Q35 6 38 12" stroke="#fff" stroke-width="1" fill="none"/>
+      <path d="M2 20 Q9 12 16 20 Q23 28 30 20 Q35 14 38 20" stroke="#fff" stroke-width="1" fill="none" opacity="0.5"/>
+      <path d="M2 28 Q9 20 16 28 Q23 36 30 28 Q35 22 38 28" stroke="#fff" stroke-width="1" fill="none" opacity="0.25"/>
+    </svg>
+    WAVES
+  </a>
+  <a class="btn" href="poligonos.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <polygon points="20,4 36,14 36,28 20,38 4,28 4,14" stroke="#fff" stroke-width="1" fill="none"/>
+      <polygon points="20,10 30,17 30,25 20,32 10,25 10,17" stroke="#fff" stroke-width="0.7" fill="none" opacity="0.5"/>
+    </svg>
+    POLÍGONOS
+  </a>
+  <a class="btn" href="estructuras.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <rect x="3" y="3" width="34" height="34" stroke="#fff" stroke-width="1" fill="none"/>
+      <rect x="3" y="3" width="18" height="34" stroke="#fff" stroke-width="0.7" fill="none"/>
+      <rect x="3" y="3" width="18" height="16" stroke="#fff" stroke-width="0.5" fill="none"/>
+      <rect x="21" y="20" width="16" height="17" stroke="#fff" stroke-width="0.5" fill="none"/>
+    </svg>
+    ESTRUCTURAS
+  </a>
+  <a class="btn" href="concentricas.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <circle cx="20" cy="20" r="16" stroke="#fff" stroke-width="1" fill="none"/>
+      <circle cx="20" cy="20" r="10" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.6"/>
+      <circle cx="20" cy="20" r="5" stroke="#fff" stroke-width="0.6" fill="none" opacity="0.4"/>
+      <circle cx="20" cy="20" r="2" fill="#fff" opacity="0.8"/>
+    </svg>
+    CONCÉNTRICAS
+  </a>
+  <a class="btn" href="parabolas.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <path d="M4 36 Q20 2 36 36" stroke="#fff" stroke-width="1" fill="none"/>
+      <path d="M4 36 Q20 8 36 36" stroke="#fff" stroke-width="0.7" fill="none" opacity="0.5"/>
+      <path d="M4 36 Q20 16 36 36" stroke="#fff" stroke-width="0.5" fill="none" opacity="0.3"/>
+    </svg>
+    PARÁBOLAS
+  </a>
+  <a class="btn" href="diagonales.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <line x1="0" y1="10" x2="30" y2="40" stroke="#fff" stroke-width="1"/>
+      <line x1="10" y1="0" x2="40" y2="30" stroke="#fff" stroke-width="1"/>
+      <line x1="20" y1="0" x2="40" y2="20" stroke="#fff" stroke-width="0.6" opacity="0.5"/>
+      <line x1="0" y1="20" x2="20" y2="40" stroke="#fff" stroke-width="0.6" opacity="0.5"/>
+    </svg>
+    DIAGONALES
+  </a>
+  <a class="btn" href="cuadrados.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <rect x="3" y="3" width="16" height="16" stroke="#fff" stroke-width="1" fill="none"/>
+      <rect x="21" y="3" width="16" height="10" stroke="#fff" stroke-width="1" fill="none"/>
+      <rect x="3" y="21" width="10" height="16" stroke="#fff" stroke-width="0.7" fill="none"/>
+      <rect x="21" y="21" width="16" height="16" stroke="#fff" stroke-width="0.7" fill="none"/>
+    </svg>
+    CUADRADOS
+  </a>
+</div>
+
+<!-- REALIDAD AUMENTADA -->
+<div class="section-label">REALIDAD AUMENTADA — APUNTA AL LIBRO</div>
+<div class="grid-ar">
+  <a class="btn btn-ar" href="ar_p7.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <polygon points="20,4 36,34 4,34" stroke="#185FA5" stroke-width="1.2" fill="none"/>
+      <circle cx="20" cy="4" r="2.5" fill="#185FA5"/>
+      <circle cx="36" cy="34" r="2.5" fill="#185FA5"/>
+      <circle cx="4" cy="34" r="2.5" fill="#185FA5"/>
+      <text x="20" y="22" fill="#185FA5" font-size="8" text-anchor="middle" font-family="monospace">AR</text>
+    </svg>
+    PÁGINA 7
+  </a>
+  <a class="btn btn-ar" href="ar_p33.html">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <polygon points="20,6 34,30 6,30" stroke="#C04828" stroke-width="1.2" fill="none"/>
+      <polygon points="24,10 36,34 12,34" stroke="#185FA5" stroke-width="1" fill="none" stroke-dasharray="3,2"/>
+      <text x="20" y="22" fill="#C04828" font-size="8" text-anchor="middle" font-family="monospace">AR</text>
+    </svg>
+    PÁGINA 33
+  </a>
+</div>
+
+<div class="footer">© JUAN CARLOS CLIMENT 2026</div>
+</body>
+</html>

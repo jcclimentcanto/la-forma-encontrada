@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Forma Encontrada — AR Proyección</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#000; overflow:hidden; font-family:'Courier New',monospace; }
+#ui {
+  position:fixed; top:0; left:0; right:0; z-index:999; pointer-events:none;
+  display:flex; justify-content:space-between; align-items:flex-start; padding:16px 20px;
+}
+.htitle { color:#C04828; font-size:11px; letter-spacing:3px; }
+.hmode  { color:#333; font-size:9px; letter-spacing:2px; margin-top:4px; }
+.back {
+  pointer-events:all; background:transparent; border:0.5px solid #181816;
+  color:#333; font-family:'Courier New',monospace; font-size:9px; letter-spacing:2px;
+  padding:6px 14px; cursor:pointer; text-decoration:none; transition:all 0.3s;
+}
+.back:hover { border-color:#C04828; color:#C04828; }
+#hint {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+  color:rgba(255,255,255,0.4); font-size:9px; letter-spacing:2px;
+  font-family:'Courier New',monospace; text-align:center; pointer-events:none;
+  z-index:999;
+}
+</style>
+</head>
+<body>
+<div id="ui">
+  <div>
+    <div class="htitle">LA FORMA ENCONTRADA</div>
+    <div class="hmode">AR — PROYECCIÓN</div>
+  </div>
+  <a class="back" href="index.html">← MENÚ</a>
+</div>
+<div id="hint">APUNTA LA CÁMARA A LA PÁGINA 33 DEL LIBRO</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-three.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tone@14/build/Tone.js"></script>
+
+<script>
+const BASE = 'https://jcclimentcanto.github.io/la-forma-encontrada/';
+
+async function start() {
+  const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+    container: document.body,
+    imageTargetSrc: BASE + 'targets.mind',
+    maxTrack: 1,
+    uiLoading: 'no',
+    uiError: 'no',
+    uiScanning: 'no'
+  });
+
+  const { renderer, scene, camera } = mindarThree;
+
+  // Anchor para la página 33 — índice 1
+  const anchor = mindarThree.addAnchor(1);
+  const group = new THREE.Group();
+  anchor.group.add(group);
+
+  // Materiales
+  const matRed  = new THREE.LineBasicMaterial({ color: 0xC04828, linewidth: 2 });
+  const matBlue = new THREE.LineDashedMaterial({ color: 0x185FA5, linewidth: 1, dashSize: 0.03, gapSize: 0.02 });
+  const matWhite = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1, transparent: true, opacity: 0.3 });
+
+  function triPoints(r, y) {
+    const pts = [];
+    for (let i = 0; i < 4; i++) {
+      const a = Math.PI * (-0.5 + (i%3) * 2/3);
+      pts.push(new THREE.Vector3(r*Math.cos(a), y, r*Math.sin(a)));
+    }
+    return pts;
+  }
+
+  function makeLine(pts, mat) {
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const line = new THREE.Line(geo, mat);
+    line.computeLineDistances();
+    return line;
+  }
+
+  // Triángulo rojo base
+  const triRed = makeLine(triPoints(0.32, 0), matRed);
+  group.add(triRed);
+
+  // Proyección azul punteada — empieza pequeña y se expande
+  const triBlue = makeLine(triPoints(0.24, -0.1), matBlue);
+  group.add(triBlue);
+
+  // Líneas de conexión entre los dos triángulos
+  for (let i = 0; i < 3; i++) {
+    const a = Math.PI * (-0.5 + i * 2/3);
+    const pts = [
+      new THREE.Vector3(0.32*Math.cos(a), 0, 0.32*Math.sin(a)),
+      new THREE.Vector3(0.24*Math.cos(a), -0.1, 0.24*Math.sin(a))
+    ];
+    group.add(makeLine(pts, matWhite));
+  }
+
+  // Anillos concéntricos que se expanden — el sistema se proyecta en 3D
+  const rings = [];
+  for (let r = 0.1; r < 0.5; r += 0.08) {
+    const pts = [];
+    for (let i = 0; i <= 64; i++) {
+      const a = (i/64) * Math.PI * 2;
+      pts.push(new THREE.Vector3(r*Math.cos(a), 0, r*Math.sin(a)));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat = new THREE.LineBasicMaterial({ color: 0x185FA5, transparent: true, opacity: 0.15 });
+    const ring = new THREE.Line(geo, mat);
+    ring.userData.baseR = r;
+    rings.push(ring);
+    group.add(ring);
+  }
+
+  // Vértices
+  for (let i = 0; i < 3; i++) {
+    const a = Math.PI * (-0.5 + i * 2/3);
+    const geo = new THREE.SphereGeometry(0.012, 8, 8);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xC04828 });
+    const sphere = new THREE.Mesh(geo, mat);
+    sphere.position.set(0.32*Math.cos(a), 0, 0.32*Math.sin(a));
+    group.add(sphere);
+  }
+
+  // Audio
+  let audioReady = false;
+  anchor.onTargetFound = async () => {
+    document.getElementById('hint').textContent = 'PROYECCIÓN DETECTADA';
+    if (!audioReady) {
+      await Tone.start();
+      const reverb = new Tone.Reverb({ decay: 7, wet: 0.7 }).toDestination();
+      const drone1 = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:4,sustain:1,release:6} }).connect(reverb);
+      const drone2 = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:6,sustain:1,release:6} }).connect(reverb);
+      drone1.volume.value = -20; drone2.volume.value = -26;
+      drone1.triggerAttack('A1'); drone2.triggerAttack('E2');
+      audioReady = true;
+    }
+  };
+  anchor.onTargetLost = () => {
+    document.getElementById('hint').textContent = 'APUNTA LA CÁMARA A LA PÁGINA 33 DEL LIBRO';
+  };
+
+  let frame = 0;
+  renderer.setAnimationLoop(() => {
+    frame++;
+    // Proyección azul se desplaza lentamente
+    triBlue.position.y = Math.sin(frame * 0.02) * 0.06;
+    triBlue.scale.setScalar(1 + Math.sin(frame * 0.015) * 0.1);
+
+    // Anillos pulsan
+    rings.forEach((ring, i) => {
+      const pulse = Math.sin(frame * 0.025 + i * 0.5) * 0.15;
+      ring.scale.setScalar(1 + pulse);
+      ring.material.opacity = 0.08 + Math.sin(frame*0.03 + i*0.8) * 0.07;
+    });
+
+    // Rotación lenta del grupo
+    group.rotation.y = frame * 0.005;
+
+    renderer.render(scene, camera);
+  });
+
+  await mindarThree.start();
+}
+
+start();
+</script>
+</body>
+</html>
